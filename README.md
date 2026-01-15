@@ -19,7 +19,7 @@ ClearThinker is an AI-powered Socratic Decision Coach designed to help users vet
 -   **AI**: Amazon Bedrock (Anthropic Claude 3.5 Sonnet / OpenAI GPT-4 compatible models).
 -   **Database**: Amazon DynamoDB.
 
-## 🏃‍♂️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
