@@ -1,16 +1,80 @@
-# React + Vite
+# ClearThinker AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ClearThinker is an AI-powered Socratic Decision Coach designed to help users vet their decisions, identify logical fallacies, and reduce cognitive bias. It acts as a "Check Engine Light" for your thinking.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **Real-time Decision Analysis**: Chat with an AI that analyzes your logic in real-time.
+-   **Traffic Light Protocol**:
+    -   🟢 **Green**: Validates data-driven logic.
+    -   🟡 **Yellow**: Challenges intuition or missing perspectives.
+    -   🔴 **Red**: Stops emotional reasoning or dangerous assumptions.
+-   **Cognitive Profiling**: Builds a user profile (Role, Industry, Traits) to provide context-aware coaching.
+-   **Logical Fallacy Detection**: Identifies over 50+ cognitive biases (e.g., Confirmation Bias, Sunk Cost Fallacy) from a curated reference library.
 
-## React Compiler
+## Technology Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **Frontend**: React (Vite), Tailwind CSS, Lucide Icons.
+-   **Backend**: AWS Lambda (Python 3.11).
+-   **AI**: Amazon Bedrock (Anthropic Claude 3.5 Sonnet / OpenAI GPT-4 compatible models).
+-   **Database**: Amazon DynamoDB.
 
-## Expanding the ESLint configuration
+## 🏃‍♂️ Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+-   Node.js (v18+)
+-   AWS Account (for backend deployment)
+
+### 1. Frontend Setup
+
+1.  Clone the repository.
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+4.  Open `http://localhost:xxxx` in your browser.
+
+> **Note**: To connect to your own custom backend, you need to deploy the backend and update `API_URL` in `src/App.jsx`.
+
+### 2. Backend Deployment (AWS)
+
+The backend code is located in the `backend/` directory.
+
+1.  **Create DynamoDB Table**:
+    -   Name: `ClearThinkerProfiles` (or set custom name in env vars).
+    -   Partition Key: `UserId` (String).
+
+2.  **Create AWS Lambda Function**:
+    -   Runtime: Python 3.11.
+    -   Code: Upload `lambda_function.py`, `prompts.py`, `constants.py`.
+    -   **Important**: You must install dependencies (`boto3` is included in Lambda, but if you add others, you need a Lambda Layer).
+
+3.  **Permissions**:
+    -   Give the Lambda IAM role permissions for:
+        -   `dynamodb:GetItem`, `dynamodb:UpdateItem` (for your table).
+        -   `bedrock:InvokeModel`.
+
+4.  **Environment Variables**:
+    -   `DYNAMODB_TABLE`: Name of your DynamoDB table.
+
+5.  **Enable Function URL**:
+    -   Create a Function URL (Auth Type: `NONE` for dev, or `AWS_IAM` for prod).
+    -   Copy the URL and paste it into `src/App.jsx` as `const API_URL`.
+
+## Project Structure
+
+```
+├── src/                # React Frontend
+│   ├── App.jsx         # Main UI & Chat Logic
+│   └── index.css       # Tailwind Styles
+├── backend/            # Serverless Backend
+│   ├── lambda_function.py  # Main Handler
+│   ├── prompts.py          # AI Prompts & Bias Library
+│   └── constants.py        # Configuration
+└── ...
+```
